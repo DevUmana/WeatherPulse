@@ -94,6 +94,8 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
+    console.log(currentWeatherDay.dt);
+
     // Format the current weather day
     const currentWeatherDayFormatted = this.unixToLocalDate(
       currentWeatherDay.dt
@@ -136,6 +138,28 @@ class WeatherService {
 
       forecastArray.push(weatherObject);
     });
+
+    // Handle the case where the current weather day is the same as the second weather day due to the external API Limitation
+    const currentWeatherDay = forecastArray[0].date;
+    const secondWeatherDay = forecastArray[1].date;
+
+    if (currentWeatherDay === secondWeatherDay) { 
+      forecastArray.shift();
+      const lastWeatherData = weatherData[weatherData.length - 1];
+      console.log(lastWeatherData);
+      console.log(lastWeatherData.dt);
+      const weatherObject: Weather = new Weather(
+        this.cityName,
+        dayjs(lastWeatherData.dt_txt).format("MM/DD/YYYY"),
+        lastWeatherData.weather[0].icon,
+        lastWeatherData.weather[0].description,
+        lastWeatherData.main.temp,
+        lastWeatherData.wind.speed,
+        lastWeatherData.main.humidity
+      );
+      forecastArray.push(weatherObject);
+      console.log(forecastArray);
+    }
 
     return forecastArray;
   }
