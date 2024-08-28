@@ -251,7 +251,8 @@ const handleSearchFormSubmit = (event: any): void => {
   event.preventDefault();
 
   if (!searchInput.value) {
-    throw new Error('City cannot be blank');
+    alert('City field cannot be blank');
+    throw new Error('City field cannot be blank');
   }
 
   const search: string = searchInput.value.trim();
