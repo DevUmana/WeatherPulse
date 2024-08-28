@@ -1,7 +1,12 @@
 import dotenv from "dotenv";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
 // Load the environment variables
 dotenv.config();
+// dayjs plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // Coordinates interface
 interface Coordinates {
@@ -49,11 +54,12 @@ class WeatherService {
     this.apiKey = process.env.API_KEY || "";
   }
 
-  // fetchLocationData method to fetch location data 
+  // fetchLocationData method to fetch location data
   private async fetchLocationData(query: string) {
     const response = await fetch(query);
     const data = await response.json();
     const locationData = data[0];
+
     return locationData;
   }
 
@@ -85,16 +91,18 @@ class WeatherService {
   }
   // parseCurrentWeather method to parse the current weather
   private parseCurrentWeather(response: any) {
-
     // Find the current weather day
-    const currentWeatherDay = response.find((item: any) =>
-      item.dt_txt.includes("18:00:00")
+    const currentWeatherDay = response[0];
+
+    // Format the current weather day
+    const currentWeatherDayFormatted = this.unixToLocalDate(
+      currentWeatherDay.dt
     );
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
       this.cityName,
-      dayjs.unix(currentWeatherDay.dt).format("MM/DD/YYYY"),
+      currentWeatherDayFormatted,
       currentWeatherDay.weather[0].icon,
       currentWeatherDay.weather[0].description,
       currentWeatherDay.main.temp,
@@ -104,9 +112,8 @@ class WeatherService {
 
     return currentWeather;
   }
-  // buildForecastArray method to build the forecast array 
+  // buildForecastArray method to build the forecast array
   private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
-    
     // Create an array with the current weather object
     const forecastArray: Weather[] = [currentWeather];
 
@@ -131,6 +138,12 @@ class WeatherService {
     });
 
     return forecastArray;
+  }
+
+  // unix timestamp conversion to locale date
+  private unixToLocalDate(unixTimestamp: number) {
+    const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return dayjs.unix(unixTimestamp).tz(localeTimeZone).format("MM/DD/YYYY");
   }
 
   // getWeatherForCity method to get the weather for a city
