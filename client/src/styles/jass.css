@@ -5,7 +5,7 @@
  * 1. Correct the line height in all browsers.
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
-html {
+ html {
   line-height: 1.15;
   /* 1 */
   -webkit-text-size-adjust: 100%;
@@ -186,9 +186,9 @@ select {
    * Correct the inability to style clickable types in iOS and Safari.
    */
 button,
-[type="button"],
-[type="reset"],
-[type="submit"] {
+[type='button'],
+[type='reset'],
+[type='submit'] {
   -webkit-appearance: button;
   appearance: button;
 }
@@ -197,9 +197,9 @@ button,
    * Remove the inner border and padding in Firefox.
    */
 button::-moz-focus-inner,
-[type="button"]::-moz-focus-inner,
-[type="reset"]::-moz-focus-inner,
-[type="submit"]::-moz-focus-inner {
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
@@ -208,9 +208,9 @@ button::-moz-focus-inner,
    * Restore the focus styles unset by the previous rule.
    */
 button:-moz-focusring,
-[type="button"]:-moz-focusring,
-[type="reset"]:-moz-focusring,
-[type="submit"]:-moz-focusring {
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 
@@ -260,8 +260,8 @@ textarea {
    * 1. Add the correct box sizing in IE 10.
    * 2. Remove the padding in IE 10.
    */
-[type="checkbox"],
-[type="radio"] {
+[type='checkbox'],
+[type='radio'] {
   box-sizing: border-box;
   /* 1 */
   padding: 0;
@@ -271,8 +271,8 @@ textarea {
 /**
    * Correct the cursor style of increment and decrement buttons in Chrome.
    */
-[type="number"]::-webkit-inner-spin-button,
-[type="number"]::-webkit-outer-spin-button {
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
   height: auto;
 }
 
@@ -280,7 +280,7 @@ textarea {
    * 1. Correct the odd appearance in Chrome and Safari.
    * 2. Correct the outline style in Safari.
    */
-[type="search"] {
+[type='search'] {
   -webkit-appearance: textfield;
   appearance: textfield;
   /* 1 */
@@ -291,7 +291,7 @@ textarea {
 /**
    * Remove the inner padding in Chrome and Safari on macOS.
    */
-[type="search"]::-webkit-search-decoration {
+[type='search']::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -358,8 +358,8 @@ body {
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-size: 16px;
   color: #1a1a1a;
 }
@@ -864,27 +864,27 @@ a:hover {
 
 /* Gap */
 .gap-0 {
-  gap: 0 !important;
+  gap: 0!important
 }
 
 .gap-1 {
-  gap: 0.25rem !important;
+  gap: .25rem!important
 }
 
 .gap-2 {
-  gap: 0.5rem !important;
+  gap: .5rem!important;
 }
 
 .gap-3 {
-  gap: 1rem !important;
+  gap: 1rem!important
 }
 
 .gap-4 {
-  gap: 1.5rem !important;
+  gap: 1.5rem!important
 }
 
 .gap-5 {
-  gap: 3rem !important;
+  gap: 3rem!important
 }
 
 .text-uppercase {
@@ -1203,13 +1203,13 @@ form .form-input.form-input-squared {
   border-radius: 0;
 }
 
-form [type="checkbox"],
-form [type="radio"] {
+form [type='checkbox'],
+form [type='radio'] {
   display: inline-block;
 }
 
-label form [type="checkbox"],
-label form [type="radio"] {
+label form [type='checkbox'],
+label form [type='radio'] {
   display: inline-block;
 }
 
@@ -1305,10 +1305,11 @@ label form [type="radio"] {
   margin-right: 5px;
 }
 
-[class*="col-"] {
+[class*='col-'] {
   position: relative;
   width: 100%;
-  padding-right: 5px;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .col-auto {
@@ -1323,6 +1324,7 @@ label form [type="radio"] {
 
 .col-2 {
   flex: 0 0 16.66667%;
+  max-width: 16.66667%;
 }
 
 .col-3 {
@@ -1372,6 +1374,8 @@ label form [type="radio"] {
 
 .col-12 {
   flex: 0 0 100%;
+  padding-left: 0;
+  padding-right: 0;
   max-width: 100%;
 }
 
@@ -1505,6 +1509,7 @@ label form [type="radio"] {
   .col-md-1 {
     flex: 0 0 8.33333%;
     max-width: 8.33333%;
+
 
     .col-md-2 {
       flex: 0 0 16.66667%;
@@ -1692,6 +1697,7 @@ label form [type="radio"] {
 
   .justify-flex-start-lg {
     justify-content: flex-start;
+
 
     .justify-flex-end-lg {
       justify-content: flex-end;
