@@ -25,7 +25,7 @@ WeatherPulse provides users with accurate and up-to-date weather information for
 
 ## Usage
 
-Application Walkthrough [TBD](TBD)
+Application Walkthrough [https://drive.google.com/file/d/1ezzbfAqMiSypdH-sfrlB20n8Wh_mAm1p/view](https://drive.google.com/file/d/1ezzbfAqMiSypdH-sfrlB20n8Wh_mAm1p/view)
 
 ## License
 
@@ -65,7 +65,6 @@ I am open to any feedback and improvements that others may have!
 - AC 3 Clicking on a saved City should return that City weather information
 - AC 4 Clicking on the delete button should remove the saved City 
 - AC 5 Refreshing the will clear the current and 5-day weather forecast
-- 
 
 ## Authors and acknowledgment
 
