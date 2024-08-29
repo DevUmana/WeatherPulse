@@ -150,6 +150,7 @@ class WeatherService {
       forecastArray.push(weatherObject);
     });
 
+    // Check if the current weather day is the same as the second weather day to handle limitation with external API
     const currentWeatherDay = forecastArray[0].date;
     const secondWeatherDay = forecastArray[1].date;
 
