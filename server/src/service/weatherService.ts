@@ -94,7 +94,7 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
-    console.log("currentWeatherDay: " + currentWeatherDay);
+    console.log("currentWeatherDay: " + currentWeatherDay.dt);
 
     // Format the current weather day
     const currentWeatherDayFormatted = this.unixToLocalDate(
@@ -173,18 +173,15 @@ class WeatherService {
 
   // unixToLocalDate method to convert unix timestamp to local date
   private unixToLocalTimeStamp(unixTimestamp: number) {
-    const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // add timezone to the date
     return dayjs
       .unix(unixTimestamp)
-      .tz(localeTimeZone)
       .format("MM/DD/YYYY HH:mm:ss");
   }
 
   // unix timestamp conversion to locale date
   private unixToLocalDate(unixTimestamp: number) {
-    const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return dayjs.unix(unixTimestamp).tz(localeTimeZone).format("MM/DD/YYYY");
+    return dayjs.unix(unixTimestamp).format("MM/DD/YYYY");
   }
 
   // getWeatherForCity method to get the weather for a city
