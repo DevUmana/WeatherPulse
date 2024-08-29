@@ -95,14 +95,16 @@ class WeatherService {
     const currentWeatherDay = response[0];
 
     // Format the current weather day
-    const currentWeatherDayFormatted = this.unixToLocalDate(
-      currentWeatherDay.dt_txt
-    );
+    const currentDate = new Date(currentWeatherDay.dt * 1000);
+    // format to MM/DD/YYYY
+    const currentDateTime = currentDate.toLocaleDateString();
+
+    console.log(currentDateTime);
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
       this.cityName,
-      currentWeatherDayFormatted,
+      currentDateTime,
       currentWeatherDay.weather[0].icon,
       currentWeatherDay.weather[0].description,
       currentWeatherDay.main.temp,
@@ -132,7 +134,8 @@ class WeatherService {
 
     //update weatherData dt time to user local time minus the current date time
     weatherData.forEach((weather) => {
-      weather.dt_txt = this.unixToLocalDate(weather.dt_txt);
+      const newDate = new Date(weather.dt * 1000);
+      weather.dt_txt = newDate.toLocaleDateString();
     });
 
     // add last day to uniqueDatesArray
@@ -154,14 +157,6 @@ class WeatherService {
     });
 
     return forecastArray;
-  }
-
-  // unix timestamp conversion to locale date
-  private unixToLocalDate(unixTimestamp: string) {
-    const currentDateTime = unixTimestamp.split(" ")[0];
-    const currentDateTimeUpdated = dayjs(currentDateTime)
-      .format("MM/DD/YYYY");
-    return currentDateTimeUpdated;
   }
 
   // getWeatherForCity method to get the weather for a city
