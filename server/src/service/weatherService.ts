@@ -1,11 +1,9 @@
 import dotenv from "dotenv";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc.js";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
 // Load the environment variables
 dotenv.config();
 // dayjs plugins
-dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 // Coordinates interface
