@@ -153,9 +153,6 @@ class WeatherService {
       forecastArray.push(weatherObject);
     });
 
-    console.log(forecastArray.length);
-    console.log(forecastArray);
-
     return forecastArray;
   }
 
