@@ -97,6 +97,7 @@ class WeatherService {
     // format to MM/DD/YYYY
     const currentDateTime = currentDate.toLocaleDateString();
 
+    console.log(currentWeatherDay.dt);
     console.log(currentDateTime);
 
     // Create a new Weather object with the current weather data
