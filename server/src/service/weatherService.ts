@@ -1,12 +1,12 @@
 import dotenv from "dotenv";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
-import timezone from "dayjs/plugin/timezone.js";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
 // Load the environment variables
 dotenv.config();
 // dayjs plugins
 dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(customParseFormat);
 
 // Coordinates interface
 interface Coordinates {
@@ -112,28 +112,31 @@ class WeatherService {
 
     return currentWeather;
   }
+
   // buildForecastArray method to build the forecast array
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+  private buildForecastArray(weatherData: any[]) {
     // Create an array with the current weather object
-    const forecastArray: Weather[] = [currentWeather];
+    const forecastArray: Weather[] = [];
 
-    //update weatherData dt time to user local time
-    weatherData.forEach((weather) => {
-      weather.dt_txt = this.unixToLocalDate(weather.dt);
-      weather.dt = this.unixToLocalTimeStamp(weather.dt);
-    });
-
-    // Creates a new current date thats 12 hours ahead
-    let currentDate = weatherData[0].dt;
-    currentDate = dayjs(currentDate)
-      .add(12, "hour")
-      .format("MM/DD/YYYY HH:mm:ss");
-    currentDate = currentDate.split(" ")[1];
+    // Creates a new current date thats 24 hours ahead
+    const currentDate = weatherData[0].dt_txt;
+    const currentDateTime = currentDate.split(" ")[1];
+    const currentDateTimeUpdated = dayjs(currentDateTime, "HH:mm:ss")
+      .add(24, "hour")
+      .format("HH:mm:ss");
 
     // Filter unique dates from the forecastArray using the currentDate
     const uniqueDatesArray = weatherData.filter((weather) =>
-      weather.dt.includes(currentDate)
+      weather.dt_txt.includes(currentDateTimeUpdated)
     );
+
+    //update weatherData dt time to user local time minus the current date time
+    weatherData.forEach((weather) => {
+      weather.dt_txt = this.unixToLocalDate(weather.dt);
+    });
+
+    // add last day to uniqueDatesArray
+    uniqueDatesArray.push(weatherData[weatherData.length - 1]);
 
     // Create a new Weather object for each unique date and add it to the forecastArray
     uniqueDatesArray.forEach((weather) => {
@@ -150,35 +153,10 @@ class WeatherService {
       forecastArray.push(weatherObject);
     });
 
-    // Check if the current weather day is the same as the second weather day to handle limitation with external API
-    const currentWeatherDay = forecastArray[0].date;
-    const secondWeatherDay = forecastArray[1].date;
-
-    if (currentWeatherDay === secondWeatherDay) { 
-      forecastArray.shift();
-      const lastWeatherData = weatherData[weatherData.length - 1];
-      const weatherObject: Weather = new Weather(
-        this.cityName,
-        lastWeatherData.dt_txt,
-        lastWeatherData.weather[0].icon,
-        lastWeatherData.weather[0].description,
-        lastWeatherData.main.temp,
-        lastWeatherData.wind.speed,
-        lastWeatherData.main.humidity
-      );
-
-      forecastArray.push(weatherObject);
-    }
+    console.log(forecastArray.length);
+    console.log(forecastArray);
 
     return forecastArray;
-  }
-
-  // unixToLocalDate method to convert unix timestamp to local date
-  private unixToLocalTimeStamp(unixTimestamp: number) {
-    // add timezone to the date
-    return dayjs
-      .unix(unixTimestamp)
-      .format("MM/DD/YYYY HH:mm:ss");
   }
 
   // unix timestamp conversion to locale date
@@ -191,11 +169,8 @@ class WeatherService {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
-    const currentWeather = this.parseCurrentWeather(weatherData.list);
-    const forecastArray = this.buildForecastArray(
-      currentWeather,
-      weatherData.list
-    );
+    this.parseCurrentWeather(weatherData.list);
+    const forecastArray = this.buildForecastArray(weatherData.list);
     return forecastArray;
   }
 }
