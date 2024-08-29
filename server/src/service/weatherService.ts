@@ -94,14 +94,10 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
-    console.log("currentWeatherDay: " + currentWeatherDay.dt);
-
     // Format the current weather day
     const currentWeatherDayFormatted = this.unixToLocalDate(
       currentWeatherDay.dt
     );
-
-    console.log("currentWeatherDayFormatted: " + currentWeatherDayFormatted);
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
@@ -121,17 +117,11 @@ class WeatherService {
     // Create an array with the current weather object
     const forecastArray: Weather[] = [currentWeather];
 
-    console.log("forecastArray: " + forecastArray[0].date);
-    console.log("weatherData: " + weatherData[0].dt);
-
     //update weatherData dt time to user local time
     weatherData.forEach((weather) => {
       weather.dt_txt = this.unixToLocalDate(weather.dt);
       weather.dt = this.unixToLocalTimeStamp(weather.dt);
     });
-
-    console.log("weatherData dt: " + weatherData[0].dt);
-    console.log("weatherData dt_txt: " + weatherData[0].dt_txt);
 
     // Creates a new current date thats 12 hours ahead
     let currentDate = weatherData[0].dt;
@@ -140,15 +130,10 @@ class WeatherService {
       .format("MM/DD/YYYY HH:mm:ss");
     currentDate = currentDate.split(" ")[1];
 
-    console.log("currentDate: " + currentDate);
-
     // Filter unique dates from the forecastArray using the currentDate
     const uniqueDatesArray = weatherData.filter((weather) =>
       weather.dt.includes(currentDate)
     );
-
-    console.log("uniqueDatesArray");
-    console.log(uniqueDatesArray);
 
     // Create a new Weather object for each unique date and add it to the forecastArray
     uniqueDatesArray.forEach((weather) => {
@@ -165,8 +150,24 @@ class WeatherService {
       forecastArray.push(weatherObject);
     });
 
-    console.log("forecastArray");
-    console.log(forecastArray);
+    const currentWeatherDay = forecastArray[0].date;
+    const secondWeatherDay = forecastArray[1].date;
+
+    if (currentWeatherDay === secondWeatherDay) { 
+      forecastArray.shift();
+      const lastWeatherData = weatherData[weatherData.length - 1];
+      const weatherObject: Weather = new Weather(
+        this.cityName,
+        lastWeatherData.dt_txt,
+        lastWeatherData.weather[0].icon,
+        lastWeatherData.weather[0].description,
+        lastWeatherData.main.temp,
+        lastWeatherData.wind.speed,
+        lastWeatherData.main.humidity
+      );
+
+      forecastArray.push(weatherObject);
+    }
 
     return forecastArray;
   }
