@@ -5,12 +5,17 @@ const router = Router();
 import HistoryService from "../../service/historyService.js";
 import WeatherService from "../../service/weatherService.js";
 import weatherService from "../../service/weatherService.js";
+import { Console } from "console";
 
 // POST Request with city name to retrieve weather data
 router.post("/", async (req: Request, res: Response) => {
   try {
     const cityName = req.body.city;
     const timeZone = req.body.timeZone;
+
+    console.log("City name: " + cityName);
+    console.log("Time zone: " + timeZone);
+
     weatherService.getTimeZone(timeZone);
 
     if (!cityName) {
@@ -24,7 +29,9 @@ router.post("/", async (req: Request, res: Response) => {
     }
 
     await HistoryService.addCity(cityName);
-    console.log("City successfully added to search history - " + new Date().toISOString());
+    console.log(
+      "City successfully added to search history - " + new Date().toISOString()
+    );
     console.log("===============================================");
 
     res.json(cities);
@@ -43,7 +50,10 @@ router.get("/history", async (_req: Request, res: Response) => {
   try {
     const savedCities = await HistoryService.getCities();
     res.json(savedCities);
-    console.log("City successfully retrieved from search history - " + new Date().toISOString());
+    console.log(
+      "City successfully retrieved from search history - " +
+        new Date().toISOString()
+    );
     console.log("===============================================");
   } catch (error) {
     console.log(error);
@@ -60,7 +70,10 @@ router.delete("/history/:id", async (req: Request, res: Response) => {
 
     await HistoryService.removeCity(req.params.id);
     res.json({ success: "City successfully removed from search history" });
-    console.log("City successfully removed from search history - " + new Date().toISOString());
+    console.log(
+      "City successfully removed from search history - " +
+        new Date().toISOString()
+    );
     console.log("===============================================");
   } catch (error) {
     console.log(error);

@@ -35,7 +35,6 @@ API Calls
 */
 
 const fetchWeather = async (cityName: string, timeZone: string) => {
-  
   // get timezone from the browser
 
   const response = await fetch("/api/weather/", {

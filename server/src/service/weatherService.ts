@@ -9,7 +9,7 @@ dotenv.config();
 dayjs.extend(customParseFormat);
 
 //get the browser timezone
-let userTimeZone: any; 
+let userTimeZone: any;
 
 // Coordinates interface
 interface Coordinates {
@@ -97,13 +97,11 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
-    // Get the current date in EST
+    // Get the current date in the user's timezone
     const currentDate = new Date(currentWeatherDay.dt * 1000);
     const options = { timeZone: userTimeZone, hour12: false };
-    console.log("options: ");
-    console.log(options);
-    const dateInEST = currentDate.toLocaleString("en-US", options);
-    const currentDateFormatted = dateInEST.split(",")[0];
+    const dateInUserTimeZone = currentDate.toLocaleString("en-US", options);
+    const currentDateFormatted = dateInUserTimeZone.split(",")[0];
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
@@ -124,12 +122,12 @@ class WeatherService {
     // Create an array with the current weather object
     const forecastArray: Weather[] = [currentWeather];
 
-    // Update the weatherData array with the current EST date
+    // Update the weatherData array with the user timezone
     weatherData.forEach((weather) => {
       const newDate = new Date(weather.dt * 1000);
       const options = { timeZone: userTimeZone, hour12: false };
-      const dateInEST = newDate.toLocaleString("en-US", options);
-      weather.dt_txt = dateInEST;
+      const dateInUserTimeZone = newDate.toLocaleString("en-US", options);
+      weather.dt_txt = dateInUserTimeZone;
     });
 
     // increase the current date by 21 hours
@@ -171,7 +169,7 @@ class WeatherService {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
-    const currentWeather = await this.parseCurrentWeather(weatherData.list);
+    const currentWeather = this.parseCurrentWeather(weatherData.list);
     const forecastArray = this.buildForecastArray(
       currentWeather,
       weatherData.list
