@@ -98,49 +98,15 @@ class WeatherService {
     console.log("===============================================");
 
     const currentDate = new Date(currentWeatherDay.dt*1000);
-
-    const currentOffset = currentDate.getTimezoneOffset();
-    const diff = currentOffset - 240;
-    const newDate = new Date(currentDate.getTime() + diff * 60000);
-    console.log("newDate");
-    console.log(newDate);
-
     const options = { timeZone: 'America/New_York' };
     const dateInNY = currentDate.toLocaleString('en-US', options);
-
-    console.log("dateInNY");
     console.log(dateInNY);
-
-    console.log("currentDate");
-    console.log(currentDate);
-    //log timezone
-    console.log("timezone");
-    console.log(currentDate.getTimezoneOffset());
-    // log UTC
-    console.log("UTC");
-    // include 0000 to the current date
-    console.log(currentDate.toString());
-    console.log(currentDate.toUTCString());
-    // log GMT
-    console.log("GMT");
-    console.log(currentDate.toUTCString());
-    // log local time
-    console.log("local time");
-    console.log(currentDate.toLocaleString());
-    // log format
-    console.log("format");
-    console.log(currentDate.toDateString());
-
-    // format to MM/DD/YYYY
-    const currentD = currentDate.getDate();
-    const currentM = currentDate.getMonth() + 1;
-    const currentY = currentDate.getFullYear();
-    const currentDateTime = `${currentM}/${currentD}/${currentY}`;
+    const dateOnly = dateInNY.split(",")[0];
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
       this.cityName,
-      currentDateTime,
+      dateOnly,
       currentWeatherDay.weather[0].icon,
       currentWeatherDay.weather[0].description,
       currentWeatherDay.main.temp,
@@ -170,13 +136,11 @@ class WeatherService {
 
     //update weatherData dt time to user local time minus the current date time
     weatherData.forEach((weather) => {
-      const newDate = new Date(weather.dt * 1000 + 240 * 60 * 1000);
-      // format to MM/DD/YYYY
-      const currentD = newDate.getDate();
-      const currentM = newDate.getMonth() + 1;
-      const currentY = newDate.getFullYear();
-      const currentDateTime = `${currentM}/${currentD}/${currentY}`;
-      weather.dt_txt = currentDateTime;
+      const newDate = new Date(weather.dt * 1000);
+      const options = { timeZone: 'America/New_York' };
+      const dateInNY = newDate.toLocaleString('en-US', options);
+      const dateOnly = dateInNY.split(",")[0];
+      weather.dt_txt = dateOnly;
     });
 
     // add last day to uniqueDatesArray
