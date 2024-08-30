@@ -97,7 +97,7 @@ class WeatherService {
     console.log(currentWeatherDay.dt);
     console.log("===============================================");
 
-    const currentDate = new Date(currentWeatherDay.dt);
+    const currentDate = new Date(currentWeatherDay.dt*1000);
 
     const currentOffset = currentDate.getTimezoneOffset();
     const diff = currentOffset - 240;
