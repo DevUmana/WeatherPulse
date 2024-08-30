@@ -96,7 +96,8 @@ class WeatherService {
     console.log("currentWeatherDay");
     console.log(currentWeatherDay.dt);
     console.log("===============================================");
-    const currentDate = new Date(currentWeatherDay.dt * 1000);
+    // include a timezone offset of 240 minutes
+    const currentDate = new Date(currentWeatherDay.dt * 1000 + 240 * 60 * 1000);
     console.log("currentDate");
     console.log(currentDate);
     //log timezone
@@ -154,7 +155,7 @@ class WeatherService {
 
     //update weatherData dt time to user local time minus the current date time
     weatherData.forEach((weather) => {
-      const newDate = new Date(weather.dt * 1000);
+      const newDate = new Date(weather.dt * 1000 + 240 * 60 * 1000);
       // format to MM/DD/YYYY
       const currentD = newDate.getDate();
       const currentM = newDate.getMonth() + 1;
