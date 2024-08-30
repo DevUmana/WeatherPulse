@@ -94,11 +94,12 @@ class WeatherService {
 
     // Format the current weather day
     const currentDate = new Date(currentWeatherDay.dt * 1000);
-    // format to MM/DD/YYYY
-    const currentDateTime = currentDate.toLocaleDateString();
 
-    console.log(currentWeatherDay.dt);
-    console.log(currentDateTime);
+    // format to MM/DD/YYYY
+    const currentD = currentDate.getDate();
+    const currentM = currentDate.getMonth() + 1;
+    const currentY = currentDate.getFullYear();
+    const currentDateTime = `${currentM}/${currentD}/${currentY}`;
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
@@ -134,7 +135,12 @@ class WeatherService {
     //update weatherData dt time to user local time minus the current date time
     weatherData.forEach((weather) => {
       const newDate = new Date(weather.dt * 1000);
-      weather.dt_txt = newDate.toLocaleDateString();
+      // format to MM/DD/YYYY
+      const currentD = newDate.getDate();
+      const currentM = newDate.getMonth() + 1;
+      const currentY = newDate.getFullYear();
+      const currentDateTime = `${currentM}/${currentD}/${currentY}`;
+      weather.dt_txt = currentDateTime;
     });
 
     // add last day to uniqueDatesArray
