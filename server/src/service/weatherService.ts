@@ -96,8 +96,21 @@ class WeatherService {
     console.log("currentWeatherDay");
     console.log(currentWeatherDay.dt);
     console.log("===============================================");
-    // include a timezone offset of 240 minutes
-    const currentDate = new Date(currentWeatherDay.dt * 1000 + 240 * 60 * 1000);
+
+    const currentDate = new Date(currentWeatherDay.dt);
+
+    const currentOffset = currentDate.getTimezoneOffset();
+    const diff = currentOffset - 240;
+    const newDate = new Date(currentDate.getTime() + diff * 60000);
+    console.log("newDate");
+    console.log(newDate);
+
+    const options = { timeZone: 'America/New_York' };
+    const dateInNY = currentDate.toLocaleString('en-US', options);
+
+    console.log("dateInNY");
+    console.log(dateInNY);
+
     console.log("currentDate");
     console.log(currentDate);
     //log timezone
@@ -105,6 +118,8 @@ class WeatherService {
     console.log(currentDate.getTimezoneOffset());
     // log UTC
     console.log("UTC");
+    // include 0000 to the current date
+    console.log(currentDate.toString());
     console.log(currentDate.toUTCString());
     // log GMT
     console.log("GMT");
