@@ -4,16 +4,21 @@ const router = Router();
 // Import the services
 import HistoryService from "../../service/historyService.js";
 import WeatherService from "../../service/weatherService.js";
+import weatherService from "../../service/weatherService.js";
 
 // POST Request with city name to retrieve weather data
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const cityName = req.body.cityName;
+    const cityName = req.body.city;
+    const timeZone = req.body.timeZone;
+    weatherService.getTimeZone(timeZone);
+
     if (!cityName) {
       res.status(400).json({ msg: "City name is required" });
     }
 
     const cities = await WeatherService.getWeatherForCity(cityName);
+
     if (!cities) {
       res.status(404).json({ msg: "City not found" });
     }

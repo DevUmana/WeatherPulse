@@ -9,7 +9,7 @@ dotenv.config();
 dayjs.extend(customParseFormat);
 
 //get the browser timezone
-const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+let userTimeZone: any; 
 
 // Coordinates interface
 interface Coordinates {
@@ -97,12 +97,11 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
-    //get the browser timezone
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
     // Get the current date in EST
     const currentDate = new Date(currentWeatherDay.dt * 1000);
-    const options = { timeZone: timeZone, hour12: false };
+    const options = { timeZone: userTimeZone, hour12: false };
+    console.log("options: ");
+    console.log(options);
     const dateInEST = currentDate.toLocaleString("en-US", options);
     const currentDateFormatted = dateInEST.split(",")[0];
 
@@ -128,7 +127,7 @@ class WeatherService {
     // Update the weatherData array with the current EST date
     weatherData.forEach((weather) => {
       const newDate = new Date(weather.dt * 1000);
-      const options = { timeZone: timeZone, hour12: false };
+      const options = { timeZone: userTimeZone, hour12: false };
       const dateInEST = newDate.toLocaleString("en-US", options);
       weather.dt_txt = dateInEST;
     });
@@ -161,6 +160,10 @@ class WeatherService {
     });
 
     return forecastArray;
+  }
+
+  getTimeZone(timeZone: string) {
+    userTimeZone = timeZone;
   }
 
   // getWeatherForCity method to get the weather for a city

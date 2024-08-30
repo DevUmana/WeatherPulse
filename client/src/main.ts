@@ -34,13 +34,17 @@ API Calls
 
 */
 
-const fetchWeather = async (cityName: string) => {
+const fetchWeather = async (cityName: string, timeZone: string) => {
+  
+  // get timezone from the browser
+
   const response = await fetch("/api/weather/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ cityName }),
+    // pass city and timezone to the server
+    body: JSON.stringify({ city: cityName, timeZone: timeZone }),
   });
 
   if (!response.ok) {
@@ -263,8 +267,9 @@ const handleSearchFormSubmit = (event: any): void => {
     throw new Error("City field must contain letters only");
   }
 
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const search: string = searchInput.value.trim();
-  fetchWeather(search).then(() => {
+  fetchWeather(search, timeZone).then(() => {
     getAndRenderHistory();
   });
   searchInput.value = "";
@@ -272,8 +277,9 @@ const handleSearchFormSubmit = (event: any): void => {
 
 const handleSearchHistoryClick = (event: any) => {
   if (event.target.matches(".history-btn")) {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const city = event.target.textContent;
-    fetchWeather(city).then(getAndRenderHistory);
+    fetchWeather(city, timeZone).then(getAndRenderHistory);
   }
 };
 
