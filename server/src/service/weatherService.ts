@@ -92,15 +92,10 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
-    // Format the current weather day
-    console.log("currentWeatherDay");
-    console.log(currentWeatherDay.dt);
-    console.log("===============================================");
-
-    const currentDate = new Date(currentWeatherDay.dt*1000);
-    const options = { timeZone: 'America/New_York' };
-    const dateInNY = currentDate.toLocaleString('en-US', options);
-    console.log(dateInNY);
+    // Get the current date in New York
+    const currentDate = new Date(currentWeatherDay.dt * 1000);
+    const options = { timeZone: "America/New_York", hour12: false };
+    const dateInNY = currentDate.toLocaleString("en-US", options);
     const dateOnly = dateInNY.split(",")[0];
 
     // Create a new Weather object with the current weather data
@@ -122,11 +117,18 @@ class WeatherService {
     // Create an array with the current weather object
     const forecastArray: Weather[] = [];
 
-    // Creates a new current date thats 24 hours ahead
+    weatherData.forEach((weather) => {
+      const newDate = new Date(weather.dt * 1000);
+      const options = { timeZone: "America/New_York", hour12: false };
+      const dateInNY = newDate.toLocaleString("en-US", options);
+      weather.dt_txt = dateInNY;
+    });
+
+    // increase the current date by 21 hours
     const currentDate = weatherData[0].dt_txt;
     const currentDateTime = currentDate.split(" ")[1];
     const currentDateTimeUpdated = dayjs(currentDateTime, "HH:mm:ss")
-      .add(24, "hour")
+      .add(21, "hour")
       .format("HH:mm:ss");
 
     // Filter unique dates from the forecastArray using the currentDate
@@ -134,12 +136,10 @@ class WeatherService {
       weather.dt_txt.includes(currentDateTimeUpdated)
     );
 
-    //update weatherData dt time to user local time minus the current date time
-    weatherData.forEach((weather) => {
-      const newDate = new Date(weather.dt * 1000);
-      const options = { timeZone: 'America/New_York' };
-      const dateInNY = newDate.toLocaleString('en-US', options);
-      const dateOnly = dateInNY.split(",")[0];
+    // add the new date to the uniqueDatesArray
+    uniqueDatesArray.forEach((weather) => {
+      const newDate = weather.dt_txt;
+      const dateOnly = newDate.split(",")[0];
       weather.dt_txt = dateOnly;
     });
 
