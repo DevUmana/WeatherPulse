@@ -93,7 +93,27 @@ class WeatherService {
     const currentWeatherDay = response[0];
 
     // Format the current weather day
+    console.log("currentWeatherDay");
+    console.log(currentWeatherDay.dt);
+    console.log("===============================================");
     const currentDate = new Date(currentWeatherDay.dt * 1000);
+    console.log("currentDate");
+    console.log(currentDate);
+    //log timezone
+    console.log("timezone");
+    console.log(currentDate.getTimezoneOffset());
+    // log UTC
+    console.log("UTC");
+    console.log(currentDate.toUTCString());
+    // log GMT
+    console.log("GMT");
+    console.log(currentDate.toUTCString());
+    // log local time
+    console.log("local time");
+    console.log(currentDate.toLocaleString());
+    // log format
+    console.log("format");
+    console.log(currentDate.toDateString());
 
     // format to MM/DD/YYYY
     const currentD = currentDate.getDate();
