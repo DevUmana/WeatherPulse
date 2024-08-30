@@ -1,10 +1,15 @@
 import dotenv from "dotenv";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
+
 // Load the environment variables
 dotenv.config();
+
 // dayjs plugins
 dayjs.extend(customParseFormat);
+
+//get the browser timezone
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 // Coordinates interface
 interface Coordinates {
@@ -92,16 +97,19 @@ class WeatherService {
     // Find the current weather day
     const currentWeatherDay = response[0];
 
-    // Get the current date in New York
+    //get the browser timezone
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Get the current date in EST
     const currentDate = new Date(currentWeatherDay.dt * 1000);
-    const options = { timeZone: "America/New_York", hour12: false };
-    const dateInNY = currentDate.toLocaleString("en-US", options);
-    const dateOnly = dateInNY.split(",")[0];
+    const options = { timeZone: timeZone, hour12: false };
+    const dateInEST = currentDate.toLocaleString("en-US", options);
+    const currentDateFormatted = dateInEST.split(",")[0];
 
     // Create a new Weather object with the current weather data
     const currentWeather: Weather = new Weather(
       this.cityName,
-      dateOnly,
+      currentDateFormatted,
       currentWeatherDay.weather[0].icon,
       currentWeatherDay.weather[0].description,
       currentWeatherDay.main.temp,
@@ -113,15 +121,16 @@ class WeatherService {
   }
 
   // buildForecastArray method to build the forecast array
-  private buildForecastArray(weatherData: any[]) {
+  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
     // Create an array with the current weather object
-    const forecastArray: Weather[] = [];
+    const forecastArray: Weather[] = [currentWeather];
 
+    // Update the weatherData array with the current EST date
     weatherData.forEach((weather) => {
       const newDate = new Date(weather.dt * 1000);
-      const options = { timeZone: "America/New_York", hour12: false };
-      const dateInNY = newDate.toLocaleString("en-US", options);
-      weather.dt_txt = dateInNY;
+      const options = { timeZone: timeZone, hour12: false };
+      const dateInEST = newDate.toLocaleString("en-US", options);
+      weather.dt_txt = dateInEST;
     });
 
     // increase the current date by 21 hours
@@ -131,26 +140,16 @@ class WeatherService {
       .add(21, "hour")
       .format("HH:mm:ss");
 
-    // Filter unique dates from the forecastArray using the currentDate
+    // Filter currentDateTimeUpdated from the weatherData array
     const uniqueDatesArray = weatherData.filter((weather) =>
       weather.dt_txt.includes(currentDateTimeUpdated)
     );
-
-    // add the new date to the uniqueDatesArray
-    uniqueDatesArray.forEach((weather) => {
-      const newDate = weather.dt_txt;
-      const dateOnly = newDate.split(",")[0];
-      weather.dt_txt = dateOnly;
-    });
-
-    // add last day to uniqueDatesArray
-    uniqueDatesArray.push(weatherData[weatherData.length - 1]);
 
     // Create a new Weather object for each unique date and add it to the forecastArray
     uniqueDatesArray.forEach((weather) => {
       const weatherObject: Weather = new Weather(
         this.cityName,
-        weather.dt_txt,
+        weather.dt_txt.split(",")[0],
         weather.weather[0].icon,
         weather.weather[0].description,
         weather.main.temp,
@@ -169,8 +168,11 @@ class WeatherService {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
-    this.parseCurrentWeather(weatherData.list);
-    const forecastArray = this.buildForecastArray(weatherData.list);
+    const currentWeather = await this.parseCurrentWeather(weatherData.list);
+    const forecastArray = this.buildForecastArray(
+      currentWeather,
+      weatherData.list
+    );
     return forecastArray;
   }
 }
